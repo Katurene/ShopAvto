@@ -1,0 +1,16 @@
+﻿
+<!DOCTYPE html>
+
+
+    <h2>All Cars</h2>
+    @*<h3>@ViewBag.Category</h3>*@
+    <h3>@Model.CurrentCategory</h3>
+    @{
+        foreach (var car in Model.allCars)
+        {
+            <div>
+                <h2>Model: @car.Name</h2>
+                <p>Price: @car.Price.ToString("c")</p>@*преобразует в денежный формат*@
+            </div>
+        }
+    }
