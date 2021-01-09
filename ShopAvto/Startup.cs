@@ -5,22 +5,37 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ShopAvto.Data;
 using ShopAvto.Data.Interfaces;
 using ShopAvto.Data.Mocks;
+using Microsoft.EntityFrameworkCore;
+using ShopAvto.Data.Repository;
 
 namespace ShopAvto
 {
     public class Startup
     {
+        private IConfigurationRoot confString;
+
+        public Startup(IWebHostEnvironment hostingEnvironment)
+        {
+            confString = new ConfigurationBuilder().SetBasePath(hostingEnvironment.ContentRootPath).AddJsonFile("dbsettings.json").Build();
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)//служит для регистрации модулей-плагинов проекта
         {
+            services.AddDbContext<AppDBContent>(options => options.UseSqlServer(confString.GetConnectionString("DefaultConnection")));//чтобы убрать ошибку - установить Microsoft.EntityFrameworkCore.SqlServer
             services.AddMvc(option => option.EnableEndpointRouting = false);//надо выставить чтоб не ругался на новой версии
-            services.AddTransient<IAllCars, MockCars>();//позв объед интерфейс и класс кот реализ этот интерфейс <интерфейс, класс который его реализ>
-            services.AddTransient<ICarsCategory, MockCategory>();
+            //services.AddTransient<IAllCars, MockCars>();//позв объед интерфейс и класс кот реализ этот интерфейс <интерфейс, класс который его реализ>
+            //services.AddTransient<ICarsCategory, MockCategory>();
+
+            services.AddTransient<IAllCars, CarRepository>();//надо поменять класс реализации интерфейса
+            services.AddTransient<ICarsCategory, CategoryRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -30,6 +45,16 @@ namespace ShopAvto
             app.UseStatusCodePages();//отобразит коды страниц
             app.UseStaticFiles();//отображает разл картинки css статич файлы
             app.UseMvcWithDefaultRoute();//url по умолчанию
+
+             
+
+            using (var scope = app.ApplicationServices.CreateScope())//созд доп окружение
+            {
+                AppDBContent content = scope.ServiceProvider.GetRequiredService<AppDBContent>();//подключаем AppDBContent
+                DBObjects.Initial(content);//перебр в метод Initial перем-ю
+            }
+
+            
         }
     }
 }

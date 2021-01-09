@@ -17,15 +17,15 @@ namespace ShopAvto.Data.Mocks
             {
                 return new List<Car>
                 {
-                    new Car {Name = "Tesla", ShortDescription = "", LongDescription = "", Img = "",
+                    new Car {Name = "Tesla", ShortDescription = "", LongDescription = "", Img = "/img/tesla.jpg",
                     Price = 40000, IsFavorite = true, Available = true, Category = carsCategory.allCategories.First() },//allCategories.First указ что тесла электро
-                new Car {Name = "Ford", ShortDescription = "", LongDescription = "", Img = "",
+                new Car {Name = "Ford", ShortDescription = "", LongDescription = "", Img = "/img/ford.jpg",
                     Price = 4000, IsFavorite = false, Available = true, Category = carsCategory.allCategories.Last() },
-                new Car {Name = "BMW", ShortDescription = "", LongDescription = "", Img = "",
+                new Car {Name = "BMW", ShortDescription = "", LongDescription = "", Img = "/img/bmw.jpg",
                     Price = 20000, IsFavorite = true, Available = true, Category = carsCategory.allCategories.Last() },
-                new Car {Name = "Mersedes", ShortDescription = "", LongDescription = "", Img = "",
+                new Car {Name = "Mersedes", ShortDescription = "", LongDescription = "", Img = "/img/mercedes.jpg",
                     Price = 31000, IsFavorite = false, Available = false, Category = carsCategory.allCategories.Last() },
-                new Car {Name = "Nissan", ShortDescription = "", LongDescription = "", Img = "",
+                new Car {Name = "Nissan", ShortDescription = "", LongDescription = "", Img = "/img/nissan.jpg",
                     Price = 15000, IsFavorite = true, Available = true, Category = carsCategory.allCategories.First() }
                 };
             }
