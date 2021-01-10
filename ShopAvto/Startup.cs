@@ -13,6 +13,7 @@ using ShopAvto.Data.Interfaces;
 using ShopAvto.Data.Mocks;
 using Microsoft.EntityFrameworkCore;
 using ShopAvto.Data.Repository;
+using ShopAvto.Data.Models;
 
 namespace ShopAvto
 {
@@ -30,12 +31,20 @@ namespace ShopAvto
         public void ConfigureServices(IServiceCollection services)//служит для регистрации модулей-плагинов проекта
         {
             services.AddDbContext<AppDBContent>(options => options.UseSqlServer(confString.GetConnectionString("DefaultConnection")));//чтобы убрать ошибку - установить Microsoft.EntityFrameworkCore.SqlServer
+            services.AddTransient<IAllCars, CarRepository>();//надо поменять класс реализации интерфейса
+            services.AddTransient<ICarsCategory, CategoryRepository>();           
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();//для работы с сессиями
+
+            //когда два пользователя зайдут на корзину, то будут выданы разные корзины
+            services.AddScoped(sp => ShopCart.GetCart(sp));//перед mvc
+
             services.AddMvc(option => option.EnableEndpointRouting = false);//надо выставить чтоб не ругался на новой версии
             //services.AddTransient<IAllCars, MockCars>();//позв объед интерфейс и класс кот реализ этот интерфейс <интерфейс, класс который его реализ>
             //services.AddTransient<ICarsCategory, MockCategory>();
 
-            services.AddTransient<IAllCars, CarRepository>();//надо поменять класс реализации интерфейса
-            services.AddTransient<ICarsCategory, CategoryRepository>();
+            services.AddMemoryCache();
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,6 +53,9 @@ namespace ShopAvto
             app.UseDeveloperExceptionPage();//отображение ошибок
             app.UseStatusCodePages();//отобразит коды страниц
             app.UseStaticFiles();//отображает разл картинки css статич файлы
+
+            app.UseSession();
+
             app.UseMvcWithDefaultRoute();//url по умолчанию
 
              

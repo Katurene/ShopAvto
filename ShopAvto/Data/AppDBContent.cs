@@ -15,5 +15,6 @@ namespace ShopAvto.Data
 
         public DbSet<Car> Cars { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<ShopCartItem> ShopCartItems { get; set; }
     }
 }
