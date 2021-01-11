@@ -32,7 +32,7 @@ namespace ShopAvto
         {
             services.AddDbContext<AppDBContent>(options => options.UseSqlServer(confString.GetConnectionString("DefaultConnection")));//чтобы убрать ошибку - установить Microsoft.EntityFrameworkCore.SqlServer
             services.AddTransient<IAllCars, CarRepository>();//надо поменять класс реализации интерфейса
-            services.AddTransient<ICarsCategory, CategoryRepository>();           
+            services.AddTransient<ICarsCategory, CategoryRepository>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();//для работы с сессиями
 
@@ -55,10 +55,17 @@ namespace ShopAvto
             app.UseStaticFiles();//отображает разл картинки css статич файлы
 
             app.UseSession();
+            //app.UseMvcWithDefaultRoute();//url по умолчанию
 
-            app.UseMvcWithDefaultRoute();//url по умолчанию
+            //собственный url по умолчанию
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(name: "default", template: "{controller=Home}/{action=Index}/{Id?}");
+                //Car-имя контроллера точно, action-любой метод, category- долж точно соотв параметру в CarsController/List(string category), ?-необяз параметр
+                //defaults-по умолчанию
+                routes.MapRoute(name: "categoryFilter", template: "Car/{action}/{category?}", defaults: new { Controller = "Car", action = "List" });
+            });
 
-             
 
             using (var scope = app.ApplicationServices.CreateScope())//созд доп окружение
             {
@@ -66,7 +73,7 @@ namespace ShopAvto
                 DBObjects.Initial(content);//перебр в метод Initial перем-ю
             }
 
-            
+
         }
     }
 }
