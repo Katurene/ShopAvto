@@ -34,6 +34,8 @@ namespace ShopAvto
             services.AddTransient<IAllCars, CarRepository>();//надо поменять класс реализации интерфейса
             services.AddTransient<ICarsCategory, CategoryRepository>();
 
+            services.AddTransient<IAllOrders, OrdersRepository>();
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();//для работы с сессиями
 
             //когда два пользователя зайдут на корзину, то будут выданы разные корзины

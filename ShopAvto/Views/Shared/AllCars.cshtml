@@ -5,5 +5,5 @@
     <h2>@Model.Name</h2>
     <p>@Model.ShortDescription</p>
     <p>Цена: @Model.Price.ToString("c")</p>@*преобразует в денежный формат*@
-    <p><a class="btn btn-warning" href="#">Подробнее</a></p>
+    <p><a class="btn btn-warning" asp-controller="ShopCart" asp-action="AddToCart" asp-route-id="@Model.Id">Добавить в корзину</a></p>
 </div>

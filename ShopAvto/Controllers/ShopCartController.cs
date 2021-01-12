@@ -36,7 +36,7 @@ namespace ShopAvto.Controllers
         }
 
         //переадресация на др строницу и доб тов в корз
-        public RedirectToActionResult AddToCart(int id)
+        public RedirectToActionResult AddToCart(int id) //int id == asp-route-id(id-название )
         {
             //перем-я выб нужный товар из списка всех товаров по id
             var item = CarRepository.cars.FirstOrDefault(i => i.Id == id);
